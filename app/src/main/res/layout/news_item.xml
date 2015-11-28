@@ -32,7 +32,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_centerInParent="true"
                 android:layout_toRightOf="@id/iv_enclosure"
                 android:layout_toEndOf="@id/iv_enclosure">
 
@@ -49,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:lines="2"
                     android:text="test desription test desription test desription test desription test desription"/>
 
             </LinearLayout>

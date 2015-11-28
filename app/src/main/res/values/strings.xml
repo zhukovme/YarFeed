@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">YarFeed</string>
+
+    <integer name="news_loader_id">1</integer>
 </resources>
