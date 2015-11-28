@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">YarFeed</string>
 
+    <string name="progress_dialog_title">Loading…</string>
+
     <integer name="news_loader_id">1</integer>
 </resources>
