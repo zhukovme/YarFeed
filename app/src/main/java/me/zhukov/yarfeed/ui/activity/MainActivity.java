@@ -32,10 +32,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mRvNews = (RecyclerView) findViewById(R.id.rv_news);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        mRvNews.setLayoutManager(layoutManager);
+        mRvNews.setItemAnimator(itemAnimator);
 
         setSupportActionBar(toolbar);
 
         getLoaderManager().initLoader(R.integer.news_loader_id, Bundle.EMPTY, this);
+    }
+
+    private NewsCardsAdapter initAdapter(List<NewsItem> newsItems) {
+        return new NewsCardsAdapter(this, newsItems);
     }
 
     @Override
@@ -47,15 +57,9 @@ public class MainActivity extends AppCompatActivity
     public void onLoadFinished(Loader<NewsResponse> loader, NewsResponse data) {
         mNewsItems = data.getAnswer();
         if (mNewsItems != null) {
-            mRvNews = (RecyclerView) findViewById(R.id.rv_news);
-            NewsCardsAdapter newsAdapter = new NewsCardsAdapter(this, mNewsItems);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-
-            mRvNews.setAdapter(newsAdapter);
-            mRvNews.setLayoutManager(layoutManager);
-            mRvNews.setItemAnimator(itemAnimator);
+            mRvNews.setAdapter(initAdapter(mNewsItems));
         }
+        getLoaderManager().destroyLoader(R.integer.news_loader_id);
     }
 
     @Override

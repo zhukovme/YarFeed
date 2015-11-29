@@ -44,19 +44,20 @@ public class NewsLoader extends AsyncTaskLoader<NewsResponse> {
             } else {
                 onError();
             }
-            mProgressDialog.dismiss();
             return newsResponse;
         } catch (Exception e) {
-            e.printStackTrace();
+            onError();
             return new NewsResponse();
         }
     }
 
     private void onSuccess() {
+        mProgressDialog.dismiss();
         LOGGER.log(Level.SEVERE, "SUCCESS");
     }
 
     private void onError() {
+        mProgressDialog.dismiss();
         LOGGER.log(Level.SEVERE, "ERROR");
     }
 }

@@ -65,4 +65,20 @@ public class NewsItem {
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof NewsItem)) {
+            return false;
+        }
+        NewsItem that = (NewsItem) o;
+        return that.title.equals(title) &&
+                that.link.equals(link) &&
+                that.description.equals(description) &&
+                that.enclosure.equals(enclosure) &&
+                that.pubDate.equals(pubDate);
+    }
 }

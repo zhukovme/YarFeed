@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import me.zhukov.yarfeed.database.NewsTable;
 import me.zhukov.yarfeed.model.NewsItem;
 
 /**
@@ -40,6 +41,10 @@ public class NewsResponse {
     }
 
     public void save(Context context) {
-        // TODO: 11/28/2015 save news to database
+        List<NewsItem> newsItems = getAnswer();
+        if (newsItems != null) {
+            NewsTable newsTable = new NewsTable(context);
+            newsTable.save(newsItems);
+        }
     }
 }
