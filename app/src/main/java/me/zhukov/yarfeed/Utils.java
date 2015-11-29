@@ -1,7 +1,10 @@
 package me.zhukov.yarfeed;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -29,5 +32,12 @@ public class Utils {
             return date;
         }
         return new SimpleDateFormat("dd.M.yyyy  kk:mm", Locale.getDefault()).format(parsedDate);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

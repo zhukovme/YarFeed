@@ -3,6 +3,7 @@ package me.zhukov.yarfeed.ui.activity;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import java.util.List;
 
 import me.zhukov.yarfeed.R;
+import me.zhukov.yarfeed.Utils;
 import me.zhukov.yarfeed.database.NewsTable;
 import me.zhukov.yarfeed.loader.NewsLoader;
 import me.zhukov.yarfeed.model.NewsItem;
@@ -73,6 +75,10 @@ public class MainActivity extends AppCompatActivity
         mNewsItems = data;
         if (mNewsItems != null) {
             mRvNews.setAdapter(initAdapter(mNewsItems));
+        }
+        if (!Utils.isNetworkAvailable(this)) {
+            Snackbar.make(mSwipeRefreshLayout, R.string.no_internet_msg, Snackbar.LENGTH_SHORT)
+                    .show();
         }
         mSwipeRefreshLayout.setRefreshing(false);
         getLoaderManager().destroyLoader(R.integer.news_loader_id);

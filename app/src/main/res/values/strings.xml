@@ -3,6 +3,7 @@
 
     <string name="action_delete_cache">Clear cache</string>
     <string name="progress_dialog_title">Loading…</string>
+    <string name="no_internet_msg">No internet connection</string>
 
     <integer name="news_loader_id">1</integer>
 </resources>

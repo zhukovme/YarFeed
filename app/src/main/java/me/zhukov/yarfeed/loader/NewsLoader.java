@@ -5,7 +5,6 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.zhukov.yarfeed.NewsXmlParser;
@@ -54,7 +53,8 @@ public class NewsLoader extends AsyncTaskLoader<List<NewsItem>> {
             }
             return mNewsTable.getNewsList();
         } catch (Exception e) {
-            return new ArrayList<>();
+            e.printStackTrace();
+            return mNewsTable.getNewsList();
         } finally {
             mProgressDialog.dismiss();
         }
