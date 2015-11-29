@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRvNews;
-    private List<NewsItem> mNewsItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         mRvNews.setItemAnimator(itemAnimator);
 
         final Bundle refreshBundle = new Bundle();
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -72,9 +72,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<List<NewsItem>> loader, List<NewsItem> data) {
-        mNewsItems = data;
-        if (mNewsItems != null) {
-            mRvNews.setAdapter(initAdapter(mNewsItems));
+        if (data != null) {
+            mRvNews.setAdapter(initAdapter(data));
         }
         if (!Utils.isNetworkAvailable(this)) {
             Snackbar.make(mSwipeRefreshLayout, R.string.no_internet_msg, Snackbar.LENGTH_SHORT)
