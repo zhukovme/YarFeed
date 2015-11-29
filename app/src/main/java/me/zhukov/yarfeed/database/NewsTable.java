@@ -95,7 +95,6 @@ public class NewsTable {
     public void clear() {
         mDatabase = mDbHelper.getWritableDatabase();
         mDatabase.delete(Requests.TABLE_NAME, null, null);
-        mDatabase.rawQuery(Requests.DROP_REQUEST, null);
         mDatabase.close();
         mDbHelper.close();
     }
