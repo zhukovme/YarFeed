@@ -9,8 +9,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.zhukov.yarfeed.loader.NewsResponse;
-import me.zhukov.yarfeed.loader.RequestResult;
 import me.zhukov.yarfeed.model.NewsItem;
 
 /**
@@ -21,10 +19,8 @@ public class NewsXmlParser {
     private static final String URL = "http://76.ru/text/rss.xml";
 
     private XmlPullParser mParser;
-    private List<NewsItem> mNewsItems;
 
     public NewsXmlParser() {
-        mNewsItems = new ArrayList<>();
         initParser();
     }
 
@@ -39,7 +35,8 @@ public class NewsXmlParser {
         }
     }
 
-    public NewsResponse parse() throws Exception {
+    public List<NewsItem> parse() throws Exception {
+        List<NewsItem> newsItems = new ArrayList<>();
         NewsItem newsItem = new NewsItem();
         int eventType = mParser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -68,14 +65,12 @@ public class NewsXmlParser {
                     break;
                 case XmlPullParser.END_TAG:
                     if (tagName.equals("item")) {
-                        mNewsItems.add(newsItem);
+                        newsItems.add(newsItem);
                     }
                     break;
             }
             eventType = mParser.next();
         }
-        return new NewsResponse()
-                .setRequestResult(RequestResult.SUCCESS)
-                .setAnswer(mNewsItems);
+        return newsItems;
     }
 }

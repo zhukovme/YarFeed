@@ -3,24 +3,33 @@ package me.zhukov.yarfeed.loader;
 import android.app.ProgressDialog;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.os.Bundle;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.zhukov.yarfeed.NewsXmlParser;
 import me.zhukov.yarfeed.R;
+import me.zhukov.yarfeed.database.NewsTable;
+import me.zhukov.yarfeed.model.NewsItem;
 
 /**
  * @author Michael Zhukov
  */
-public class NewsLoader extends AsyncTaskLoader<NewsResponse> {
+public class NewsLoader extends AsyncTaskLoader<List<NewsItem>> {
 
-    private static final Logger LOGGER = Logger.getLogger(NewsLoader.class.getName());
+    public static final String REFRESH_BUNDLE = "refresh_bundle";
 
+    private Context mContext;
+    private NewsTable mNewsTable;
     private ProgressDialog mProgressDialog;
+    private Bundle mRefreshBundle;
 
-    public NewsLoader(Context context) {
+    public NewsLoader(Context context, Bundle refreshBundle) {
         super(context);
+        mContext = context;
+        mNewsTable = new NewsTable(context);
+        mRefreshBundle = refreshBundle;
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage(context.getString(R.string.progress_dialog_title));
         mProgressDialog.setCancelable(false);
@@ -29,35 +38,25 @@ public class NewsLoader extends AsyncTaskLoader<NewsResponse> {
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        mProgressDialog.show();
+        if (!mRefreshBundle.getBoolean(REFRESH_BUNDLE)) {
+            mProgressDialog.show();
+        }
         forceLoad();
     }
 
     @Override
-    public NewsResponse loadInBackground() {
+    public List<NewsItem> loadInBackground() {
         try {
-            NewsXmlParser parser = new NewsXmlParser();
-            NewsResponse newsResponse = parser.parse();
-            if (newsResponse.getRequestResult() == RequestResult.SUCCESS) {
-                newsResponse.save(getContext());
-                onSuccess();
-            } else {
-                onError();
+            if (mNewsTable.getNewsList().isEmpty() || mRefreshBundle.getBoolean(REFRESH_BUNDLE)) {
+                NewsXmlParser parser = new NewsXmlParser();
+                NewsTable newsTable = new NewsTable(mContext);
+                newsTable.save(parser.parse());
             }
-            return newsResponse;
+            return mNewsTable.getNewsList();
         } catch (Exception e) {
-            onError();
-            return new NewsResponse();
+            return new ArrayList<>();
+        } finally {
+            mProgressDialog.dismiss();
         }
-    }
-
-    private void onSuccess() {
-        mProgressDialog.dismiss();
-        LOGGER.log(Level.SEVERE, "SUCCESS");
-    }
-
-    private void onError() {
-        mProgressDialog.dismiss();
-        LOGGER.log(Level.SEVERE, "ERROR");
     }
 }

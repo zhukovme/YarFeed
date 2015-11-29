@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -96,6 +95,7 @@ public class NewsTable {
     public void clear() {
         mDatabase = mDbHelper.getWritableDatabase();
         mDatabase.delete(Requests.TABLE_NAME, null, null);
+        mDatabase.rawQuery(Requests.DROP_REQUEST, null);
         mDatabase.close();
         mDbHelper.close();
     }
@@ -113,11 +113,14 @@ public class NewsTable {
         String TABLE_NAME = NewsTable.class.getSimpleName();
 
         String CREATION_REQUEST = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
-                Columns.TITLE + " TEXT PRIMARY KEY, " +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Columns.TITLE + " TEXT, " +
                 Columns.LINK + " TEXT, " +
                 Columns.DESCRIPTION + " TEXT, " +
                 Columns.ENCLOSURE + " BLOB, " +
-                Columns.PUB_DATE + " TEXT" + ");";
+                Columns.PUB_DATE + " TEXT, " +
+                "UNIQUE(" + Columns.TITLE + ")" +
+                "ON CONFLICT REPLACE" + ");";
 
         String DROP_REQUEST = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
