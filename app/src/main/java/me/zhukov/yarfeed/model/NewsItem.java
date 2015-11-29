@@ -2,6 +2,8 @@ package me.zhukov.yarfeed.model;
 
 import android.graphics.Bitmap;
 
+import me.zhukov.yarfeed.Utils;
+
 /**
  * @author Michael Zhukov
  */
@@ -57,7 +59,7 @@ public class NewsItem {
     }
 
     public String getPubDate() {
-        return pubDate;
+        return Utils.dateFormatter(pubDate);
     }
 
     public void setPubDate(String pubDate) {

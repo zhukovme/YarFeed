@@ -3,7 +3,6 @@ package me.zhukov.yarfeed.loader;
 import android.app.ProgressDialog;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.widget.ProgressBar;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +23,7 @@ public class NewsLoader extends AsyncTaskLoader<NewsResponse> {
         super(context);
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage(context.getString(R.string.progress_dialog_title));
+        mProgressDialog.setCancelable(false);
     }
 
     @Override

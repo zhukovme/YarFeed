@@ -1,5 +1,8 @@
 package me.zhukov.yarfeed.ui.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +21,10 @@ import me.zhukov.yarfeed.model.NewsItem;
 public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.NewsViewHolder> {
 
     private List<NewsItem> mNewsItems;
+    private Context mContext;
 
-    public NewsCardsAdapter(List<NewsItem> newsItems) {
+    public NewsCardsAdapter(Context context, List<NewsItem> newsItems) {
+        this.mContext = context;
         this.mNewsItems = newsItems;
     }
 
@@ -35,7 +40,11 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.News
         holder.title.setText(newsItem.getTitle());
         holder.description.setText(newsItem.getDescription());
         holder.pubDate.setText(newsItem.getPubDate());
-        holder.enclosure.setImageBitmap(newsItem.getEnclosure());
+        if (newsItem.getEnclosure() == null) {
+            holder.enclosure.setImageResource(R.drawable.ic_image_area_grey600_48dp);
+        } else {
+            holder.enclosure.setImageBitmap(newsItem.getEnclosure());
+        }
     }
 
     @Override
@@ -56,6 +65,14 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.News
             description = (TextView) itemView.findViewById(R.id.tv_description);
             pubDate = (TextView) itemView.findViewById(R.id.tv_pub_date);
             enclosure = (ImageView) itemView.findViewById(R.id.iv_enclosure);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri link = Uri.parse(mNewsItems.get(getAdapterPosition()).getLink());
+                    Intent linkIntent = new Intent(Intent.ACTION_VIEW, link);
+                    mContext.startActivity(linkIntent);
+                }
+            });
         }
     }
 }

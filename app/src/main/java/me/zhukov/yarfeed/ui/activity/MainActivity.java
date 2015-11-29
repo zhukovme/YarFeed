@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         mNewsItems = data.getAnswer();
         if (mNewsItems != null) {
             mRvNews = (RecyclerView) findViewById(R.id.rv_news);
-            NewsCardsAdapter newsAdapter = new NewsCardsAdapter(mNewsItems);
+            NewsCardsAdapter newsAdapter = new NewsCardsAdapter(this, mNewsItems);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
