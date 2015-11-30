@@ -1,4 +1,4 @@
-package me.zhukov.yarfeed.ui.adapter;
+package me.zhukov.yarfeed.ui;
 
 import android.content.Context;
 import android.content.Intent;

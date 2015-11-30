@@ -1,4 +1,4 @@
-package me.zhukov.yarfeed;
+package me.zhukov.yarfeed.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

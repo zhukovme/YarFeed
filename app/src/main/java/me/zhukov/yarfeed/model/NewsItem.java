@@ -2,7 +2,7 @@ package me.zhukov.yarfeed.model;
 
 import android.graphics.Bitmap;
 
-import me.zhukov.yarfeed.Utils;
+import me.zhukov.yarfeed.util.Utils;
 
 /**
  * @author Michael Zhukov

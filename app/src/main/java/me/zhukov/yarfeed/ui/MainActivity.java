@@ -1,4 +1,4 @@
-package me.zhukov.yarfeed.ui.activity;
+package me.zhukov.yarfeed.ui;
 
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -16,11 +16,10 @@ import android.view.MenuItem;
 import java.util.List;
 
 import me.zhukov.yarfeed.R;
-import me.zhukov.yarfeed.Utils;
+import me.zhukov.yarfeed.util.Utils;
 import me.zhukov.yarfeed.database.NewsTable;
 import me.zhukov.yarfeed.loader.NewsLoader;
 import me.zhukov.yarfeed.model.NewsItem;
-import me.zhukov.yarfeed.ui.adapter.NewsCardsAdapter;
 
 /**
  * @author Michael Zhukov
@@ -47,18 +46,15 @@ public class MainActivity extends AppCompatActivity
         mRvNews.setLayoutManager(layoutManager);
         mRvNews.setItemAnimator(itemAnimator);
 
-        final Bundle refreshBundle = new Bundle();
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshBundle.putBoolean(NewsLoader.REFRESH_BUNDLE, true);
                 MainActivity.this.getLoaderManager()
-                        .restartLoader(R.integer.news_loader_id, refreshBundle, MainActivity.this);
+                        .restartLoader(R.integer.news_loader_id, Bundle.EMPTY, MainActivity.this);
             }
         });
-        refreshBundle.putBoolean(NewsLoader.REFRESH_BUNDLE, false);
-        getLoaderManager().initLoader(R.integer.news_loader_id, refreshBundle, this);
+        getLoaderManager().initLoader(R.integer.news_loader_id, Bundle.EMPTY, this);
     }
 
     private NewsCardsAdapter initAdapter(List<NewsItem> newsItems) {
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<List<NewsItem>> onCreateLoader(int id, Bundle args) {
-        return new NewsLoader(this, args);
+        return new NewsLoader(this, mSwipeRefreshLayout);
     }
 
     @Override

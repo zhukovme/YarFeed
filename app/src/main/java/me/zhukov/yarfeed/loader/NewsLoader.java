@@ -1,14 +1,11 @@
 package me.zhukov.yarfeed.loader;
 
-import android.app.ProgressDialog;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
-import me.zhukov.yarfeed.NewsXmlParser;
-import me.zhukov.yarfeed.R;
 import me.zhukov.yarfeed.database.NewsTable;
 import me.zhukov.yarfeed.model.NewsItem;
 
@@ -17,46 +14,39 @@ import me.zhukov.yarfeed.model.NewsItem;
  */
 public class NewsLoader extends AsyncTaskLoader<List<NewsItem>> {
 
-    public static final String REFRESH_BUNDLE = "refresh_bundle";
-
     private Context mContext;
     private NewsTable mNewsTable;
-    private ProgressDialog mProgressDialog;
-    private Bundle mRefreshBundle;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public NewsLoader(Context context, Bundle refreshBundle) {
+    public NewsLoader(Context context, SwipeRefreshLayout swipeRefreshLayout) {
         super(context);
         mContext = context;
         mNewsTable = new NewsTable(context);
-        mRefreshBundle = refreshBundle;
-        mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(context.getString(R.string.progress_dialog_title));
-        mProgressDialog.setCancelable(false);
+        mSwipeRefreshLayout = swipeRefreshLayout;
     }
 
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        if (!mRefreshBundle.getBoolean(REFRESH_BUNDLE)) {
-            mProgressDialog.show();
-        }
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
         forceLoad();
     }
 
     @Override
     public List<NewsItem> loadInBackground() {
         try {
-            if (mNewsTable.getNewsList().isEmpty() || mRefreshBundle.getBoolean(REFRESH_BUNDLE)) {
-                NewsXmlParser parser = new NewsXmlParser();
-                NewsTable newsTable = new NewsTable(mContext);
-                newsTable.save(parser.parse());
-            }
+            NewsXmlParser parser = new NewsXmlParser();
+            NewsTable newsTable = new NewsTable(mContext);
+            newsTable.save(parser.parse());
             return mNewsTable.getNewsList();
         } catch (Exception e) {
             e.printStackTrace();
             return mNewsTable.getNewsList();
-        } finally {
-            mProgressDialog.dismiss();
         }
     }
 }

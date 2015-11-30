@@ -1,4 +1,4 @@
-package me.zhukov.yarfeed;
+package me.zhukov.yarfeed.loader;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.zhukov.yarfeed.util.Utils;
 import me.zhukov.yarfeed.model.NewsItem;
 
 /**
