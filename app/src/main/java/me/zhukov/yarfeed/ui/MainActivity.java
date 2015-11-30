@@ -16,10 +16,10 @@ import android.view.MenuItem;
 import java.util.List;
 
 import me.zhukov.yarfeed.R;
-import me.zhukov.yarfeed.util.Utils;
 import me.zhukov.yarfeed.database.NewsTable;
 import me.zhukov.yarfeed.loader.NewsLoader;
 import me.zhukov.yarfeed.model.NewsItem;
+import me.zhukov.yarfeed.util.Utils;
 
 /**
  * @author Michael Zhukov
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         mRvNews.setLayoutManager(layoutManager);
         mRvNews.setItemAnimator(itemAnimator);
+        mRvNews.setAdapter(initAdapter(new NewsTable(this).getNewsList()));
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

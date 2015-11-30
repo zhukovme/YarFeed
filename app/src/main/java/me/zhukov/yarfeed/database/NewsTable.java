@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.zhukov.yarfeed.model.NewsItem;
+import me.zhukov.yarfeed.util.Utils;
 
 /**
  * @author Michael Zhukov
@@ -56,13 +57,6 @@ public class NewsTable {
         return new NewsItem(title, link, description, enclosure, pubDate);
     }
 
-    public void save(NewsItem newsItem) {
-        mDatabase = mDbHelper.getWritableDatabase();
-        mDatabase.insert(Requests.TABLE_NAME, null, toContentValues(newsItem));
-        mDatabase.close();
-        mDbHelper.close();
-    }
-
     public void save(List<NewsItem> newsItems) {
         mDatabase = mDbHelper.getWritableDatabase();
         for (int i = 0; i < newsItems.size(); i++) {
@@ -84,6 +78,7 @@ public class NewsTable {
             do {
                 newsItems.add(fromCursor(cursor));
             } while (cursor.moveToNext());
+            Utils.sortNewsByDate(newsItems);
             return newsItems;
         } finally {
             cursor.close();
