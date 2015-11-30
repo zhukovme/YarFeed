@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRvNews;
+    private List<NewsItem> mNewsItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +41,9 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        mRvNews.setLayoutManager(layoutManager);
-        mRvNews.setItemAnimator(itemAnimator);
-        mRvNews.setAdapter(initAdapter(new NewsTable(this).getNewsList()));
+        mNewsItems = new NewsTable(this).getNewsList();
+        mRvNews.setLayoutManager(new LinearLayoutManager(this));
+        mRvNews.setAdapter(initAdapter(mNewsItems));
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -70,7 +68,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<List<NewsItem>> loader, List<NewsItem> data) {
         if (data != null) {
-            mRvNews.setAdapter(initAdapter(data));
+            mNewsItems.clear();
+            mNewsItems.addAll(data);
+            mRvNews.getAdapter().notifyDataSetChanged();
         }
         if (!Utils.isNetworkAvailable(this)) {
             Snackbar.make(mSwipeRefreshLayout, R.string.no_internet_msg, Snackbar.LENGTH_SHORT)
