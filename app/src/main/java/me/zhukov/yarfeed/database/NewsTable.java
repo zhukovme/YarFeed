@@ -113,7 +113,7 @@ public class NewsTable {
                 Columns.DESCRIPTION + " TEXT, " +
                 Columns.ENCLOSURE + " BLOB, " +
                 Columns.PUB_DATE + " TEXT, " +
-                "UNIQUE(" + Columns.TITLE + ")" +
+                "UNIQUE(" + Columns.LINK + ")" +
                 "ON CONFLICT REPLACE" + ");";
 
         String DROP_REQUEST = "DROP TABLE IF EXISTS " + TABLE_NAME;
