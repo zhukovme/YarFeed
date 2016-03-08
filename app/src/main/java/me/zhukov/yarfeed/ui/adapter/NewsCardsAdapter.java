@@ -1,4 +1,4 @@
-package me.zhukov.yarfeed.ui;
+package me.zhukov.yarfeed.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import java.util.List;
 
 import me.zhukov.yarfeed.R;
 import me.zhukov.yarfeed.model.NewsItem;
+import me.zhukov.yarfeed.util.DateHelper;
+import me.zhukov.yarfeed.util.UrlHelper;
 
 /**
  * @author Michael Zhukov
@@ -37,9 +39,11 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.News
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int position) {
         NewsItem newsItem = mNewsItems.get(position);
+
         holder.title.setText(newsItem.getTitle());
         holder.description.setText(newsItem.getDescription());
-        holder.pubDate.setText(newsItem.getPubDate());
+        holder.pubDate.setText(DateHelper.INSTANCE.formatDate(newsItem.getPubDate()));
+
         if (newsItem.getEnclosure() == null) {
             holder.enclosure.setImageResource(R.drawable.ic_image_area_grey600_48dp);
         } else {
@@ -65,11 +69,14 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.News
             description = (TextView) itemView.findViewById(R.id.tv_description);
             pubDate = (TextView) itemView.findViewById(R.id.tv_pub_date);
             enclosure = (ImageView) itemView.findViewById(R.id.iv_enclosure);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri link = Uri.parse(mNewsItems.get(getAdapterPosition()).getLink());
-                    Intent linkIntent = new Intent(Intent.ACTION_VIEW, link);
+                    Uri uriLink = UrlHelper.INSTANCE
+                            .urlToUri(mNewsItems.get(getAdapterPosition()).getLink());
+
+                    Intent linkIntent = new Intent(Intent.ACTION_VIEW, uriLink);
                     mContext.startActivity(linkIntent);
                 }
             });

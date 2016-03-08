@@ -2,7 +2,8 @@ package me.zhukov.yarfeed.model;
 
 import android.graphics.Bitmap;
 
-import me.zhukov.yarfeed.util.Utils;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * @author Michael Zhukov
@@ -10,20 +11,22 @@ import me.zhukov.yarfeed.util.Utils;
 public class NewsItem {
 
     private String title;
-    private String link;
+    private URL link;
     private String description;
     private Bitmap enclosure;
-    private String pubDate;
+    private Date pubDate;
+    private String category;
 
     public NewsItem() {}
 
-    public NewsItem(String title, String link, String description, Bitmap enclosure,
-                    String pubDate) {
+    public NewsItem(String title, URL link, String description, Bitmap enclosure,
+                    Date pubDate, String category) {
         this.title = title;
         this.link = link;
         this.description = description;
         this.enclosure = enclosure;
         this.pubDate = pubDate;
+        this.category = category;
     }
 
     public String getTitle() {
@@ -34,11 +37,11 @@ public class NewsItem {
         this.title = title;
     }
 
-    public String getLink() {
+    public URL getLink() {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(URL link) {
         this.link = link;
     }
 
@@ -58,12 +61,20 @@ public class NewsItem {
         this.enclosure = enclosure;
     }
 
-    public String getPubDate() {
-        return Utils.dateFormatter(pubDate);
+    public Date getPubDate() {
+        return pubDate;
     }
 
-    public void setPubDate(String pubDate) {
+    public void setPubDate(Date pubDate) {
         this.pubDate = pubDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
@@ -79,6 +90,7 @@ public class NewsItem {
                 that.link.equals(link) &&
                 that.description.equals(description) &&
                 that.enclosure.equals(enclosure) &&
-                that.pubDate.equals(pubDate);
+                that.pubDate.equals(pubDate) &&
+                that.category.equals(category);
     }
 }

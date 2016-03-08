@@ -4,24 +4,24 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import java.net.URL;
 import java.util.List;
 
 import me.zhukov.yarfeed.database.NewsTable;
 import me.zhukov.yarfeed.model.NewsItem;
+import me.zhukov.yarfeed.sax.NewsXmlReader;
 
 /**
  * @author Michael Zhukov
  */
 public class NewsLoader extends AsyncTaskLoader<List<NewsItem>> {
 
-    private Context mContext;
-    private NewsTable mNewsTable;
+    public static final String XML_URL = "http://76.ru/text/rss.xml";
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public NewsLoader(Context context, SwipeRefreshLayout swipeRefreshLayout) {
         super(context);
-        mContext = context;
-        mNewsTable = new NewsTable(context);
         mSwipeRefreshLayout = swipeRefreshLayout;
     }
 
@@ -40,13 +40,12 @@ public class NewsLoader extends AsyncTaskLoader<List<NewsItem>> {
     @Override
     public List<NewsItem> loadInBackground() {
         try {
-            NewsXmlParser parser = new NewsXmlParser();
-            NewsTable newsTable = new NewsTable(mContext);
-            newsTable.save(parser.parse());
-            return mNewsTable.getNewsList();
+            URL url = new URL(XML_URL);
+            List<NewsItem> newsItems = NewsXmlReader.INSTANCE.readXML(url);
+            NewsTable.INSTANCE.save(newsItems);
         } catch (Exception e) {
             e.printStackTrace();
-            return mNewsTable.getNewsList();
         }
+        return NewsTable.INSTANCE.getNewsList();
     }
 }
