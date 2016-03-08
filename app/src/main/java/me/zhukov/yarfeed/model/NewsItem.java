@@ -11,7 +11,7 @@ import java.util.Date;
 public class NewsItem {
 
     private String title;
-    private URL link;
+    private String link;
     private String description;
     private Bitmap enclosure;
     private Date pubDate;
@@ -19,7 +19,7 @@ public class NewsItem {
 
     public NewsItem() {}
 
-    public NewsItem(String title, URL link, String description, Bitmap enclosure,
+    public NewsItem(String title, String link, String description, Bitmap enclosure,
                     Date pubDate, String category) {
         this.title = title;
         this.link = link;
@@ -37,11 +37,11 @@ public class NewsItem {
         this.title = title;
     }
 
-    public URL getLink() {
+    public String getLink() {
         return link;
     }
 
-    public void setLink(URL link) {
+    public void setLink(String link) {
         this.link = link;
     }
 

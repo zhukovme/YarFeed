@@ -7,14 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import me.zhukov.yarfeed.model.NewsItem;
 import me.zhukov.yarfeed.util.BitmapHelper;
-import me.zhukov.yarfeed.util.UrlHelper;
 
 /**
  * @author Michael Zhukov
@@ -29,11 +27,10 @@ public enum NewsTable {
     private ContentValues toContentValues(NewsItem newsItem) {
         ContentValues values = new ContentValues();
         values.put(Columns.TITLE, newsItem.getTitle());
-        values.put(Columns.LINK, newsItem.getLink().toString());
+        values.put(Columns.LINK, newsItem.getLink());
         values.put(Columns.DESCRIPTION, newsItem.getDescription());
         values.put(Columns.ENCLOSURE, BitmapHelper.INSTANCE.bitmapToBytes(newsItem.getEnclosure()));
         values.put(Columns.CATEGORY, newsItem.getCategory());
-
         values.put(Columns.PUB_DATE, newsItem.getPubDate().getTime());
         return values;
     }
@@ -41,15 +38,13 @@ public enum NewsTable {
     @NonNull
     private NewsItem fromCursor(Cursor cursor) {
         String title = cursor.getString(cursor.getColumnIndex(Columns.TITLE));
-        URL link = UrlHelper.INSTANCE.urlFromString(
-                cursor.getString(cursor.getColumnIndex(Columns.LINK)));
+        String link = cursor.getString(cursor.getColumnIndex(Columns.LINK));
         String description = cursor.getString(cursor.getColumnIndex(Columns.DESCRIPTION));
 
         byte[] enclosureBytes = cursor.getBlob(cursor.getColumnIndex(Columns.ENCLOSURE));
         Bitmap enclosure = BitmapHelper.INSTANCE.bitmapFromBytes(enclosureBytes);
 
         String category = cursor.getString(cursor.getColumnIndex(Columns.CATEGORY));
-
         Date pubDate = new Date(cursor.getLong(cursor.getColumnIndex(Columns.PUB_DATE)));
         return new NewsItem(title, link, description, enclosure, pubDate, category);
     }
@@ -91,6 +86,7 @@ public enum NewsTable {
     public void open(Context context) {
         NewsDbHelper dbHelper = new NewsDbHelper(context);
         mDatabase = dbHelper.getWritableDatabase();
+        dbHelper.onCreate(mDatabase);
     }
 
     public void close() {

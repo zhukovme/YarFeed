@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import me.zhukov.yarfeed.model.NewsItem;
 import me.zhukov.yarfeed.util.BitmapHelper;
 import me.zhukov.yarfeed.util.DateHelper;
-import me.zhukov.yarfeed.util.UrlHelper;
 
 import static me.zhukov.yarfeed.sax.NewsSaxHandler.NewsXmlTags.CATEGORY;
 import static me.zhukov.yarfeed.sax.NewsSaxHandler.NewsXmlTags.DESCRIPTION;
@@ -30,6 +29,7 @@ public class NewsSaxHandler extends DefaultHandler {
     private static final Logger LOGGER = Logger.getLogger(NewsSaxHandler.class.getName());
 
     private String mElement = null;
+    private String mValue = null;
     private NewsItem mNewsItem = null;
     private List<NewsItem> mNewsItems = null;
 
@@ -43,6 +43,7 @@ public class NewsSaxHandler extends DefaultHandler {
                              String qName, Attributes attributes) throws SAXException {
         LOGGER.log(Level.INFO, "Start element: " + qName);
         mElement = qName;
+        mValue = "";
 
         if (qName.equals(ENCLOSURE)) {
             mNewsItem.setEnclosure(BitmapHelper.INSTANCE.getBitmapFromUrl(attributes.getValue(0)));
@@ -52,27 +53,30 @@ public class NewsSaxHandler extends DefaultHandler {
     public void characters(char ch[], int start, int length) throws SAXException {
         if (mElement != null) {
             String value = new String(ch, start, length);
-            switch (mElement) {
-                case TITLE:
-                    mNewsItem.setTitle(value);
-                    break;
-                case LINK:
-                    mNewsItem.setLink(UrlHelper.INSTANCE.urlFromString(value));
-                    break;
-                case DESCRIPTION:
-                    mNewsItem.setDescription(value);
-                    break;
-                case PUB_DATE:
-                    mNewsItem.setPubDate(DateHelper.INSTANCE.dateFromString(value));
-                    break;
-                case CATEGORY:
-                    mNewsItem.setCategory(value);
-            }
-            LOGGER.log(Level.INFO,  "Value = " + value);
+            mValue += value;
         }
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        if (mElement != null) {
+            LOGGER.log(Level.INFO, "Value = " + mValue);
+            switch (mElement) {
+                case TITLE:
+                    mNewsItem.setTitle(mValue);
+                    break;
+                case LINK:
+                    mNewsItem.setLink(mValue);
+                    break;
+                case DESCRIPTION:
+                    mNewsItem.setDescription(mValue);
+                    break;
+                case PUB_DATE:
+                    mNewsItem.setPubDate(DateHelper.INSTANCE.dateFromString(mValue));
+                    break;
+                case CATEGORY:
+                    mNewsItem.setCategory(mValue);
+            }
+        }
         LOGGER.log(Level.INFO, "End element: " + qName);
         if (qName.equals(ITEM)) {
             mNewsItems.add(mNewsItem);

@@ -73,9 +73,7 @@ public class NewsCardsAdapter extends RecyclerView.Adapter<NewsCardsAdapter.News
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri uriLink = UrlHelper.INSTANCE
-                            .urlToUri(mNewsItems.get(getAdapterPosition()).getLink());
-
+                    Uri uriLink = Uri.parse(mNewsItems.get(getAdapterPosition()).getLink());
                     Intent linkIntent = new Intent(Intent.ACTION_VIEW, uriLink);
                     mContext.startActivity(linkIntent);
                 }
